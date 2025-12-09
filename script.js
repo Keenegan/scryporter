@@ -5,15 +5,22 @@ const copyBtn = document.getElementById("copyBtn");
 const resultsNumber = document.getElementById("resultsNumber");
 
 searchBtn.addEventListener("click", async () => {
-    const input = userInput.value.trim();
+    let input = userInput.value.trim();
     if (!input) return;
+
+    const scryfallUrlPattern = /https?:\/\/scryfall\.com\/search\?q=(.+)/i;
+    const match = input.match(scryfallUrlPattern);
+    if (match) {
+        console.log(match[1])
+        input = decodeURIComponent(match[1]);
+    }
 
     resultBox.value = "";
     resultsNumber.textContent = "";
     copyBtn.disabled = true;
 
     try {
-        let url = `https://api.scryfall.com/cards/search?q=${input}`;
+        let url = `https://api.scryfall.com/cards/search?q=${encodeURIComponent(input)}`;
         let cardCount = 0;
         let waitTime = 100;
 
