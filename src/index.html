@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scryporter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <h1>Scryfall results exporter</h1>
+
+    <input type="text" id="userInput" placeholder="Paste scryfall query here" autofocus />
+
+    <div class="buttons">
+        <button id="searchBtn">Search</button>
+        <button id="copyBtn">Copy to clipboard</button>
+    </div>
+
+    <h2>Results : <span id="resultsNumber"></span></h2>
+
+    <textarea id="result" readonly></textarea>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
