@@ -11,7 +11,6 @@ searchBtn.addEventListener("click", async () => {
     const scryfallUrlPattern = /https?:\/\/scryfall\.com\/search\?q=(.+)/i;
     const match = input.match(scryfallUrlPattern);
     if (match) {
-        console.log(match[1])
         input = decodeURIComponent(match[1]);
     }
 
