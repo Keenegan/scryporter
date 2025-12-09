@@ -1,61 +1,64 @@
-document.getElementById("searchBtn").addEventListener("click", async () => {
-    const input = document.getElementById("userInput").value;
-    const resultBox = document.getElementById("result");
-    const copyBtn = document.getElementById("copyBtn");
-    const resultsNumber = document.getElementById("resultsNumber");
+const userInput = document.getElementById("userInput");
+const searchBtn = document.getElementById("searchBtn");
+const resultBox = document.getElementById("result");
+const copyBtn = document.getElementById("copyBtn");
+const resultsNumber = document.getElementById("resultsNumber");
 
-    if (!input) {
-        return;
-    }
+searchBtn.addEventListener("click", async () => {
+    const input = userInput.value.trim();
+    if (!input) return;
+
+    resultBox.value = "";
+    resultsNumber.textContent = "";
+    copyBtn.disabled = true;
 
     try {
         let url = `https://api.scryfall.com/cards/search?q=${input}`;
         let cardCount = 0;
-        resultsNumber.textContent = ""
-        resultBox.textContent = ""
-        let defaultWaitTime = 100;
-        copyBtn.disabled = true;
+        let waitTime = 100;
 
         while (url) {
             const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error("HTTP " + response.status);
+            }
             const json = await response.json();
 
-            if (json.object == "error") {
-                resultBox.textContent = json.details;
+            if (json.object === "error") {
+                resultBox.value = json.details;
                 return;
             }
 
             const names = json.data.map(item => item.name);
 
-            names.forEach(name => {
-                resultBox.textContent += name + "\n";
-            });
-            await new Promise(resolve => setTimeout(resolve, defaultWaitTime));
+            resultBox.value += names.join("\n") + "\n";
+
+            cardCount += names.length;
+            resultsNumber.textContent = `${cardCount}/${json.total_cards}`;
+
+            await new Promise(r => setTimeout(r, waitTime));
+            waitTime += 50;
 
             url = json.next_page;
-            resultsNumber.textContent = (cardCount += names.length) + "/" + json.total_cards
-            defaultWaitTime += 50;
         }
-        copyBtn.disabled = false;
-
 
     } catch (err) {
         resultBox.textContent = "Erreur : " + err.message;
+    } finally {
+        copyBtn.disabled = false;
     }
 
 });
 
-document.getElementById("userInput").addEventListener("keydown", (event) => {
+userInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
         event.preventDefault();
-        document.getElementById("searchBtn").click();
+        searchBtn.click();
     }
 });
 
-document.getElementById("copyBtn").addEventListener("click", () => {
-    const text = document.getElementById("result").textContent;
-
-    navigator.clipboard.writeText(text)
+copyBtn.addEventListener("click", () => {
+    navigator.clipboard.writeText(resultBox.value)
         .catch(err => {
             alert("Copy error : " + err);
         });
