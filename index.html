@@ -12,16 +12,38 @@
 
     <h1>Scryfall results exporter</h1>
 
-    <input type="text" id="userInput" placeholder="Paste scryfall query here" autofocus />
-
-    <div class="buttons">
-        <button id="searchBtn">Search</button>
-        <button id="copyBtn">Copy to clipboard</button>
+    <div class="search-bar">
+        <div class="input-wrapper">
+            <input type="text" id="userInput" placeholder="Enter a Scryfall query or URL..." autofocus />
+            <button id="clearBtn" type="button" title="Clear" aria-label="Clear input">&times;</button>
+        </div>
+        <button id="searchBtn">
+            <span class="btn-text">Search</span>
+            <span class="btn-loader"></span>
+        </button>
     </div>
 
-    <h2>Results : <span id="resultsNumber"></span></h2>
+    <div class="results-header">
+        <h2>Results<span id="resultsNumber"></span></h2>
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
 
-    <textarea id="result" readonly></textarea>
+    <div class="results-container">
+        <div class="empty-state" id="emptyState">
+            <span class="empty-icon">🔍</span>
+            <p>Search for Magic cards using Scryfall syntax</p>
+            <p class="empty-hint">Examples: <code>c:red cmc:3</code>, <code>t:creature pow>=5</code></p>
+        </div>
+        <textarea id="result" readonly></textarea>
+        <button id="copyBtn" title="Copy to clipboard" disabled>
+            <span class="copy-icon">📋</span>
+            <span class="check-icon">✓</span>
+        </button>
+    </div>
+
+    <div class="toast" id="toast"></div>
 
     <script src="script.js"></script>
 </body>
